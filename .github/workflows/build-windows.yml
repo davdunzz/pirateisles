@@ -10,6 +10,15 @@ jobs:
       image: barichello/godot-ci:4.3
     steps:
       - uses: actions/checkout@v4
+      - name: Configure Godot export templates
+        shell: bash
+        run: |
+          TEMPLATE_VERSION="4.3.stable"
+          SOURCE_DIR="/root/.local/share/godot/export_templates/${TEMPLATE_VERSION}"
+          TARGET_DIR="${HOME}/.local/share/godot/export_templates/${TEMPLATE_VERSION}"
+          mkdir -p "${TARGET_DIR}"
+          cp -R "${SOURCE_DIR}/." "${TARGET_DIR}/"
+          test -f "${TARGET_DIR}/windows_release_x86_64.exe"
       - name: Export Windows
         run: mkdir -p build/windows && godot --headless --export-release "Windows Desktop"
       - uses: actions/upload-artifact@v4
